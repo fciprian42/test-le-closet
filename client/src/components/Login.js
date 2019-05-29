@@ -120,8 +120,9 @@ class Login extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-    operators: state.Operators.models,
-    loading: state.Operators.loading
+    operators: state.api.Operators.models,
+    session: state.session,
+    loading: state.api.Operators.loading
 })
 
 const mapDispatchToProps = dispatch => ({

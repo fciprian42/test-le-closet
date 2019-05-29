@@ -47,8 +47,6 @@ class Operators extends Component {
   render() {
     const { classes, loading, operators } = this.props;
 
-    console.log(operators)
-
     if (loading) {
       return (
         <div className={classes.progress}>
@@ -98,8 +96,8 @@ class Operators extends Component {
 }
 
 const mapStateToProps = state => ({
-  operators: state.Operators.models,
-  loading: state.Operators.loading
+  operators: state.api.Operators.models,
+  loading: state.api.Operators.loading
 });
 
 const mapDispatchToProps = dispatch => ({

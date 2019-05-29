@@ -78,8 +78,8 @@ class Postes extends Component {
 }
 
 const mapStateToProps = state => ({
-  postes: state.Postes.models,
-  loading: state.Postes.loading
+  postes: state.api.Postes.models,
+  loading: state.api.Postes.loading
 });
 
 const mapDispatchToProps = dispatch => ({
