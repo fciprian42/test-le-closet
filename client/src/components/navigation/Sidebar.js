@@ -8,38 +8,47 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
 import ComputerIcon from "@material-ui/icons/Computer";
 import HomeIcon from "@material-ui/icons/Home";
 import sessionConstants from "../../redux/constants/sessionConstants";
 
-const drawerWidth = 240;
+const drawerWidth = 350;
 
 const styles = theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0
   },
+
   drawerPaper: {
     width: drawerWidth,
     padding: theme.spacing.unit * 3,
     position: 'relative',
     height: '100vh'
   },
+
   link: {
     textDecoration: "none"
   },
+
   active: {
     "&> div": {
       backgroundColor: "rgba(0, 0, 0, 0.08)"
     }
   },
+
   login: {
     position: 'absolute',
     bottom: 15,
-    width: 191,
+    width: 301,
     textAlign: 'center'
+  },
+
+  avatar: {
+    marginBottom: '1em'
   }
 });
 
@@ -57,7 +66,9 @@ class Sidebar extends PureComponent {
 
   render() {
     const { classes, session } = this.props
-    console.log(this.props)
+
+    let sessionRead = session && JSON.parse(session.session)
+
     return (
         <Drawer
             variant="permanent"
@@ -67,6 +78,16 @@ class Sidebar extends PureComponent {
             }}
             anchor="left"
         >
+          {session.isLogged && <div className={classes.avatar}>
+            <ListItem button>
+              <ListItemIcon>
+                <Avatar>
+                  {sessionRead.name.charAt(0)}
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText primary={sessionRead.name} secondary='Operator' style={{padding: 0}}/>
+            </ListItem>
+          </div>}
           <List>
             <NavLink
                 exact
