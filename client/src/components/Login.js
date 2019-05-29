@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { railsActions } from 'redux-rails'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input, Button } from '@material-ui/core'
+import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input, Button, FormHelperText } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 import LockIcon from '@material-ui/icons/Lock'
+import CheckIcon from '@material-ui/icons/Check'
 import UserIcon from '@material-ui/icons/Person'
 
 const styles = () => ({
@@ -19,10 +20,17 @@ const styles = () => ({
     },
 
     avatar: {
-        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)!important',
+        background: '#2196f3!important',
         height: 100,
         width: 100,
         marginBottom: '5px'
+    },
+
+    success: {
+        background: '#2ed573!important',
+        height: 100,
+        width: 100,
+        marginBottom: '15px'
     },
 
     form: {
@@ -41,6 +49,8 @@ class Login extends PureComponent {
 
         this.state = {
             loading: false,
+            error: false,
+            isLogged: false,
             nameInput: '',
             operators: []
         }
@@ -52,11 +62,11 @@ class Login extends PureComponent {
     static getDerivedStateFromProps(props, prevState) {
         const { operators } = props
 
-        if (operators && operators.length > 0) {
+        if (operators && operators.length > 0 && prevState.operators.length !== operators.length) {
             let newOperators = []
 
             operators.forEach((operator) => {
-                newOperators.push(operator.attributes.name)
+                newOperators.push({id: operator.attributes.id, name: operator.attributes.name})
             })
 
             return {
@@ -76,29 +86,56 @@ class Login extends PureComponent {
         const value = e.target.value
 
         this.setState({
-            nameInput: value
+            nameInput: value,
+            error: false
         })
     }
 
-    handleSubmit() {
+    handleSubmit(e) {
+        const { nameInput, operators } = this.state
 
+        e.preventDefault()
+
+        const found = operators.find((operator) => {
+            return operator.name === nameInput
+        })
+
+        if (found) {
+            this.setState({
+                loading: true,
+                error: false
+            })
+
+            setTimeout(() => {
+                this.setState({
+                    isLogged: true
+                })
+            }, 1000)
+        } else {
+            this.setState({
+                error: true
+            })
+        }
     }
 
     render() {
+        const { loading, isLogged, error } = this.state
         const { classes } = this.props
-
         return (
             <div className={classes.root}>
-                <Avatar className={classes.avatar}>
-                    <LockIcon />
+                <Avatar className={!isLogged ? classes.avatar : classes.success}>
+                    {!isLogged && <LockIcon />}
+                    {isLogged && <CheckIcon />}
                 </Avatar>
                 <Typography variant='h4' style={{fontWeight: 300, marginBottom: '1em'}}>
-                    Login to your dashboard
+                    {!isLogged && <>Login to your dashboard</>}
+                    {isLogged && <>Welcome {this.state.nameInput}</>}
                 </Typography>
-                <form onSubmit={this.handleSubmit} className={classes.form}>
+                {!loading && <form onSubmit={this.handleSubmit} className={classes.form}>
                     <FormControl fullWidth>
                         <InputLabel htmlFor="username">Username</InputLabel>
                         <Input
+                            required
                             id="username"
                             value={this.state.nameInput}
                             onChange={this.handleChange}
@@ -109,11 +146,17 @@ class Login extends PureComponent {
                                 <UserIcon/>
                             </InputAdornment>}
                         />
+                        {error && <FormHelperText id='username' style={{color: '#eb4d4b'}}>
+                            This operator doesn't exist
+                        </FormHelperText>}
                     </FormControl>
-                    <Button fullWidth type='submit' variant='contained' style={{marginTop: '2em', background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)', color: '#fff'}}>
+                    <Button fullWidth type='submit' variant='contained' color='primary' style={{marginTop: '2em', color: '#fff'}}>
                         Login
                     </Button>
-                </form>
+                </form>}
+                {loading && !isLogged && <div>
+                    <CircularProgress size={32} />
+                </div>}
             </div>
         )
     }
