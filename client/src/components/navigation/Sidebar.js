@@ -1,9 +1,10 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
@@ -19,7 +20,9 @@ const styles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    position: 'relative',
+    height: '100vh'
   },
   link: {
     textDecoration: "none"
@@ -28,6 +31,12 @@ const styles = theme => ({
     "&> div": {
       backgroundColor: "rgba(0, 0, 0, 0.08)"
     }
+  },
+  login: {
+    position: 'absolute',
+    bottom: 15,
+    width: 191,
+    textAlign: 'center'
   }
 });
 
@@ -81,6 +90,13 @@ const Sidebar = ({ classes }) => (
         </ListItem>
       </NavLink>
     </List>
+    <div className={classes.login}>
+      <Link to='/login' style={{textDecoration: 'none'}}>
+        <Button color='secondary' style={{width: '100%'}}>
+          Se connecter
+        </Button>
+      </Link>
+    </div>
   </Drawer>
 );
 
