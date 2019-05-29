@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { railsActions } from 'redux-rails'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input } from '@material-ui/core'
+import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 import LockIcon from '@material-ui/icons/Lock'
@@ -110,6 +110,9 @@ class Login extends PureComponent {
                             </InputAdornment>}
                         />
                     </FormControl>
+                    <Button fullWidth type='submit' variant='contained' style={{marginTop: '2em', background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)', color: '#fff'}}>
+                        Login
+                    </Button>
                 </form>
             </div>
         )
