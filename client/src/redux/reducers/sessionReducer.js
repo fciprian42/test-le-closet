@@ -7,9 +7,11 @@ const initialState = session ? {isLogged: true, session} : {isLogged: false, ses
 function sessionReducer(state = initialState, action) {
     switch (action.type) {
         case sessionConstants.LOGIN:
-            return {}
+            sessionStorage.setItem('auth', JSON.stringify(action.data))
+            return { session: JSON.stringify(action.data), isLogged: true }
         case sessionConstants.LOGOUT:
-            return {}
+            sessionStorage.removeItem('auth')
+            return { session: null, isLogged: false }
         default:
             return state
     }
