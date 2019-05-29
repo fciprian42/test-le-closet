@@ -92,8 +92,8 @@ const Sidebar = ({ classes }) => (
     </List>
     <div className={classes.login}>
       <Link to='/login' style={{textDecoration: 'none'}}>
-        <Button color='secondary' style={{width: '100%'}}>
-          Se connecter
+        <Button color='primary' style={{width: '100%'}}>
+          Login
         </Button>
       </Link>
     </div>
