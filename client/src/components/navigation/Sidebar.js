@@ -12,6 +12,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
 import ComputerIcon from "@material-ui/icons/Computer";
 import HomeIcon from "@material-ui/icons/Home";
+import sessionConstants from "../../redux/constants/sessionConstants";
 
 const drawerWidth = 240;
 
@@ -45,11 +46,17 @@ const styles = theme => ({
 class Sidebar extends PureComponent {
   constructor(props) {
     super(props);
+
+    this.handleLogout = this.handleLogout.bind(this)
+  }
+
+  handleLogout() {
+    this.props.dispatch({type: sessionConstants.LOGOUT})
+    this.props.location.routesMap.push('/login')
   }
 
   render() {
-    const { classes } = this.props
-
+    const { classes, session } = this.props
     console.log(this.props)
     return (
         <Drawer
@@ -101,20 +108,26 @@ class Sidebar extends PureComponent {
               </ListItem>
             </NavLink>
           </List>
-          <div className={classes.login}>
+          {!session.isLogged && <div className={classes.login}>
             <Link to='/login' style={{textDecoration: 'none'}}>
               <Button color='primary' style={{width: '100%'}}>
                 Login
               </Button>
             </Link>
-          </div>
+          </div>}
+          {session.isLogged && <div className={classes.login}>
+              <Button onClick={this.handleLogout} color='secondary' style={{width: '100%'}}>
+                Logout
+              </Button>
+          </div>}
         </Drawer>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  session: state.session
+  session: state.session,
+  location: state.location
 })
 
 export default compose(connect(mapStateToProps), withStyles(styles))(Sidebar)
