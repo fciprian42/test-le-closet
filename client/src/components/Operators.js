@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { railsActions } from "redux-rails";
+import { Link } from 'react-router-dom'
 import {
   CircularProgress,
   List,
@@ -26,6 +27,9 @@ const styles = theme => ({
   },
   todo: {
     marginTop: theme.spacing.unit * 4
+  },
+  link: {
+    textDecoration: 'none'
   }
 });
 
@@ -43,6 +47,8 @@ class Operators extends Component {
   render() {
     const { classes, loading, operators } = this.props;
 
+    console.log(operators)
+
     if (loading) {
       return (
         <div className={classes.progress}>
@@ -53,14 +59,31 @@ class Operators extends Component {
 
     return (
       <div className={classes.root}>
+        <Typography variant='h5'>
+          Liste des opérateurs
+        </Typography>
         <List>
           {_.map(operators, operator => (
-            <ListItem key={operator.id}>
-              <ListItemAvatar>
-                <Avatar alt={`Avatar ID ${operator.id}`} />
-              </ListItemAvatar>
-              <ListItemText inset primary={operator.attributes.name} />
-            </ListItem>
+            <Link
+                key={operator.id}
+                to={{
+                  pathname: `dashboard/${operator.attributes.id}`,
+                  state: {
+                    id: operator.attributes.id,
+                    name: operator.attributes.name
+                  }
+                }}
+                className={classes.link}
+            >
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar alt={`Avatar ID ${operator.id}`}>
+                    {operator.attributes.name.charAt(0)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText inset primary={operator.attributes.name} />
+              </ListItem>
+            </Link>
           ))}
         </List>
         <Typography className={classes.todo}>
