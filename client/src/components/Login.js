@@ -5,10 +5,12 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input, Button, FormHelperText } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
+import sessionConstants from '../redux/constants/sessionConstants'
 
 import LockIcon from '@material-ui/icons/Lock'
 import CheckIcon from '@material-ui/icons/Check'
 import UserIcon from '@material-ui/icons/Person'
+import {Redirect} from "react-router-dom";
 
 const styles = () => ({
     root: {
@@ -51,6 +53,8 @@ class Login extends PureComponent {
             loading: false,
             error: false,
             isLogged: false,
+            seconds: 5,
+            id: null,
             nameInput: '',
             operators: []
         }
@@ -79,7 +83,32 @@ class Login extends PureComponent {
     }
 
     componentDidMount() {
-        this.props.fetchOperators();
+        const { session } = this.props
+
+        if (session.isLogged) {
+            let sessionRead = JSON.parse(session.session)
+
+            this.props.history.push(`/dashboard/${sessionRead.id}`)
+        } else {
+            this.props.fetchOperators();
+
+            this.timerID = setInterval(
+                () => this.tick(),
+                1000
+            );
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+    tick() {
+        if (this.state.isLogged && this.state.seconds >= 1) {
+            this.setState({
+                seconds: this.state.seconds - 1
+            });
+        }
     }
 
     handleChange(e) {
@@ -96,19 +125,25 @@ class Login extends PureComponent {
 
         e.preventDefault()
 
-        const found = operators.find((operator) => {
-            return operator.name === nameInput
+        const user = operators.find((operator) => {
+            if (operator.name === nameInput) return operator
         })
 
-        if (found) {
+        if (user) {
             this.setState({
                 loading: true,
+                id: user.id,
                 error: false
             })
 
             setTimeout(() => {
                 this.setState({
                     isLogged: true
+                })
+
+                this.props.setSession({
+                    id: user.id,
+                    name: user.name
                 })
             }, 1000)
         } else {
@@ -121,11 +156,24 @@ class Login extends PureComponent {
     render() {
         const { loading, isLogged, error } = this.state
         const { classes } = this.props
+
+        if (this.state.seconds <= 0) {
+           return <Redirect
+               to={{
+                   pathname: `dashboard/${this.state.id}`,
+                   state: {
+                       id: this.state.id,
+                       name: this.state.nameInput
+                   }
+               }}
+           />
+        }
+
         return (
             <div className={classes.root}>
                 <Avatar className={!isLogged ? classes.avatar : classes.success}>
-                    {!isLogged && <LockIcon />}
-                    {isLogged && <CheckIcon />}
+                    {!isLogged && <LockIcon style={{ fontSize: 40 }} />}
+                    {isLogged && <CheckIcon style={{ fontSize: 40 }} />}
                 </Avatar>
                 <Typography variant='h4' style={{fontWeight: 300, marginBottom: '1em'}}>
                     {!isLogged && <>Login to your dashboard</>}
@@ -157,6 +205,11 @@ class Login extends PureComponent {
                 {loading && !isLogged && <div>
                     <CircularProgress size={32} />
                 </div>}
+                {isLogged && <div>
+                    <Typography variant='h6' style={{fontWeight: 300, marginTop: '1em'}}>
+                        You will be redirect to your dashboard in {this.state.seconds}...
+                    </Typography>
+                </div>}
             </div>
         )
     }
@@ -171,6 +224,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchOperators: () => {
         dispatch(railsActions.index({ resource: "Operators" }))
+    },
+    setSession: (user) => {
+        dispatch({ type: sessionConstants.LOGIN, data: user})
     }
 })
 
