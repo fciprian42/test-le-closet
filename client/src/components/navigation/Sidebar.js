@@ -79,14 +79,25 @@ class Sidebar extends PureComponent {
             anchor="left"
         >
           {session.isLogged && <div className={classes.avatar}>
-            <ListItem button>
-              <ListItemIcon>
-                <Avatar>
-                  {sessionRead.name.charAt(0)}
-                </Avatar>
-              </ListItemIcon>
-              <ListItemText primary={sessionRead.name} secondary='Operator' style={{padding: 0}}/>
-            </ListItem>
+            <Link
+                to={{
+                  pathname: `dashboard/${sessionRead.id}`,
+                  state: {
+                    id: sessionRead.id,
+                    name: sessionRead.name
+                  }
+                }}
+                className={classes.link}
+            >
+              <ListItem button>
+                <ListItemIcon>
+                  <Avatar>
+                    {sessionRead.name.charAt(0)}
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText primary={sessionRead.name} secondary='Operator' style={{padding: 0}}/>
+              </ListItem>
+            </Link>
           </div>}
           <List>
             <NavLink
