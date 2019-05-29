@@ -9,11 +9,17 @@ import "typeface-roboto";
 import { store } from "./redux";
 import App from "./components/App";
 import ErrorBoundary from "./components/ErrorBoundary";
+import blue from '@material-ui/core/colors/blue';
+import pink from '@material-ui/core/colors/pink';
 
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true
-  }
+  },
+  palette: {
+    primary: blue,
+    secondary: pink
+  },
 });
 
 ReactDOM.render(
