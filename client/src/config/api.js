@@ -9,6 +9,9 @@ export default {
     },
     Products: {
       controller: 'products'
+    },
+    Items: {
+      controller: 'items'
     }
   }
 };
