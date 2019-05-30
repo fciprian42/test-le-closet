@@ -126,6 +126,17 @@ class Pickup extends PureComponent {
                 }
             }).then(response => {
                 if (response.data) {
+                    let sessionRead = JSON.parse(sessionStorage.getItem('auth'))
+
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:3000/api/operators_postes',
+                        data: {
+                            operator_id: sessionRead.id,
+                            poste_id: 1
+                        }
+                    })
+
                     this.setState({
                         add: true,
                         name: product.name
