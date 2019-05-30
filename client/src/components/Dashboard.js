@@ -5,6 +5,9 @@ import { connect } from 'react-redux'
 import { Typography, FormControl, MenuItem, Select, Input } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import {railsActions} from "redux-rails";
+import sessionConstants from '../redux/constants/sessionConstants'
+
+import axios from 'axios'
 
 const styles = () => ({
     root: {
@@ -27,6 +30,7 @@ class Dashboard extends PureComponent {
         this.state = {
             id: null,
             currentService: '',
+            score: 0,
             name: null,
             postes: [],
             redirect: false
@@ -36,25 +40,19 @@ class Dashboard extends PureComponent {
     }
 
     static getDerivedStateFromProps(props, prevState) {
-        const { state } = props.location
-        const { session } = props.session
         const { postes } = props
-        let sessionRead = null
-        let newPostes = []
 
-        postes.forEach((poste) => {
-            newPostes.push(poste.attributes.category)
-        })
+        if (postes && postes.length > 0) {
+            let newPostes = []
 
-        if (session && session.isLogged) {
-            sessionRead = JSON.parse(session.session)
-        }
+            postes.forEach((poste) => {
+                newPostes.push({id: poste.attributes.id, category: poste.attributes.category})
+            })
 
-        if (state && state.id && state.name) {
             return {
-                id: sessionRead ? sessionRead.id : state.id,
-                name: sessionRead ? sessionRead.name : state.name,
-                postes: newPostes
+                ...prevState,
+                postes: newPostes,
+                currentService: prevState.currentService
             }
         }
 
@@ -62,12 +60,27 @@ class Dashboard extends PureComponent {
     }
 
     componentDidMount() {
-        if (!this.state.id || !this.state.name) {
-            this.setState({
-                redirect: true
+        if (this.props.match.params.id) {
+            this.props.fetchPostes();
+
+            axios({
+                method: 'get',
+                url: 'http://localhost:3000/api/operators/' +  this.props.match.params.id
+            }).then(response => {
+                if (response.data && response.data.id) {
+                    this.setState({
+                        id: response.data.id,
+                        name: response.data.first_name + ' ' + response.data.last_name,
+                        score: response.data.score,
+                    })
+                }
             })
         } else {
-            this.props.fetchPostes()
+            if (!this.props.match.params.id || !this.props.session.isLogged) {
+                this.setState({
+                    redirect: true
+                })
+            }
         }
     }
 
@@ -77,6 +90,8 @@ class Dashboard extends PureComponent {
         this.setState({
             currentService: value
         })
+
+        this.props.setService(value)
     }
 
     render() {
@@ -84,7 +99,6 @@ class Dashboard extends PureComponent {
         const { redirect, name, postes, currentService} = this.state
 
         let sessionRead = session && session.isLogged && JSON.parse(session.session)
-
 
         if (redirect) {
             return <Redirect to='/'/>
@@ -95,16 +109,16 @@ class Dashboard extends PureComponent {
                 {name}
             </Typography>
             <Typography variant='h6' style={{fontWeight: 300}}>
-                {currentService && 'currently serving in'}
+                You are tag in
                 {sessionRead.id === this.state.id && <FormControl className={classes.formControl}>
                     <Select
                         value={currentService}
                         onChange={this.handleChange}
                         input={<Input id="select" />}
                     >
-                        {postes.map((name) => (
-                            <MenuItem key={name} value={name}>
-                                {name}
+                        {postes.map((poste) => (
+                            <MenuItem key={poste.id} value={poste.category}>
+                                {poste.category}
                             </MenuItem>
                         ))}
                     </Select>
@@ -117,12 +131,16 @@ class Dashboard extends PureComponent {
 
 const mapStateToProps = state => ({
     session: state.session,
-    postes: state.api.Postes.models
+    postes: state.api.Postes.models,
+    operator: state.api.Operators.models
 })
 
 const mapDispatchToProps = dispatch => ({
     fetchPostes: () => {
         dispatch(railsActions.index({ resource: "Postes" }));
+    },
+    setService: (category) => {
+        dispatch({type: sessionConstants.SWITCH_SERVICE, data: category})
     }
 });
 
