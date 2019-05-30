@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { CircularProgress, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@material-ui/core'
+import { CircularProgress, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Avatar } from '@material-ui/core'
 
 import axios from 'axios'
 
@@ -34,7 +34,14 @@ const styles = () => ({
 
     btn: {
         minWidth: '48px!important'
-    }
+    },
+
+    success: {
+        background: '#2ed573!important',
+        height: 100,
+        width: 100,
+        marginBottom: '15px'
+    },
 })
 
 
@@ -50,6 +57,8 @@ class Pickup extends PureComponent {
 
         this.state = {
             add: false,
+            remove: false,
+            success_add: false,
             name: '',
             products: []
         }
@@ -64,6 +73,8 @@ class Pickup extends PureComponent {
         if (products && products.length > 0) {
             return {
                 add: prevState.add,
+                remove: prevState.remove,
+                success_add: prevState.success_add,
                 name: prevState.name && prevState.name.length > 0 ? prevState.name : '',
                 products
             }
@@ -85,7 +96,7 @@ class Pickup extends PureComponent {
                 let newProducts = this.state.products
 
                 this.setState({
-                    add: true,
+                    remove: true,
                     name: product.name
                 })
 
@@ -97,7 +108,7 @@ class Pickup extends PureComponent {
 
                 setTimeout(() => {
                     this.setState({
-                        add: false,
+                        remove: false,
                         products: newProducts
                     })
                 }, 750)
@@ -107,18 +118,57 @@ class Pickup extends PureComponent {
 
     handlePickup(product) {
         if (product) {
+            axios({
+                method: 'post',
+                url: 'http://localhost:3000/api/items',
+                data: {
+                    product_id: product.id
+                }
+            }).then(response => {
+                if (response.data) {
+                    this.setState({
+                        add: true,
+                        name: product.name
+                    })
 
+                    setTimeout(() => {
+                        this.setState({
+                            add: false,
+                            success_add: true
+                        })
+                    }, 750)
+
+                    setTimeout(() => {
+                        this.setState({
+                            success_add: false
+                        })
+                    }, 2500)
+                }
+            })
         }
     }
 
     render() {
         const { classes, loading } = this.props
-        const { add, products } = this.state
+        const { add, remove, products, success_add } = this.state
 
-        if (loading || add) {
+        if (loading || remove || add) {
             return (
                 <div className={classes.loading}>
                     <CircularProgress size={64} />
+                </div>
+            );
+        }
+
+        if (success_add) {
+            return (
+                <div className={classes.loading}>
+                    <Avatar className={classes.success}>
+                        <FontAwesomeIcon icon={['fal', 'check']} style={{fontSize: '40px'}} />
+                    </Avatar>
+                    <Typography variant='h5'>
+                        The product '<strong>{this.state.name}</strong>' has been add to checkup list
+                    </Typography>
                 </div>
             );
         }
@@ -147,7 +197,7 @@ class Pickup extends PureComponent {
                                     <Button onClick={() => {this.handleDelete(product.attributes)}} color='secondary' className={classes.btn}>
                                         <FontAwesomeIcon icon={['fal', 'times']} />
                                     </Button>
-                                    <Button onClick={() => {this.handleDelete(product.attributes)}} color='primary' className={classes.btn}>
+                                    <Button onClick={() => {this.handlePickup(product.attributes)}} color='primary' className={classes.btn}>
                                         <FontAwesomeIcon icon={['fal', 'plus']} />
                                     </Button>
                                 </TableCell>
