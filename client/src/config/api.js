@@ -12,6 +12,9 @@ export default {
     },
     Items: {
       controller: 'items'
+    },
+    OperatorsPostes: {
+      controller: 'operators_postes'
     }
   }
 };
