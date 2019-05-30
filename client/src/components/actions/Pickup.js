@@ -48,6 +48,8 @@ const styles = () => ({
 
 
 class Pickup extends PureComponent {
+    _isMounted = false
+
     static propTypes = {
         fetchProducts: PropTypes.func.isRequired,
         products: PropTypes.array.isRequired,
@@ -86,7 +88,11 @@ class Pickup extends PureComponent {
     }
 
     componentDidMount() {
-        this.props.fetchProducts()
+        this._isMounted = true
+
+        if (this._isMounted) {
+            this.props.fetchProducts()
+        }
     }
 
     handleDelete(product) {
@@ -120,16 +126,18 @@ class Pickup extends PureComponent {
 
     handlePickup(product) {
         if (product) {
+            let sessionRead = JSON.parse(sessionStorage.getItem('auth'))
+
             axios({
                 method: 'post',
                 url: 'http://localhost:3000/api/items',
                 data: {
-                    product_id: product.id
+                    product_id: product.id,
+                    by: sessionRead.name,
+                    product_name: product.name
                 }
             }).then(response => {
                 if (response.data) {
-                    let sessionRead = JSON.parse(sessionStorage.getItem('auth'))
-
                     axios({
                         method: 'post',
                         url: 'http://localhost:3000/api/operators_postes',
@@ -137,30 +145,30 @@ class Pickup extends PureComponent {
                             operator_id: sessionRead.id,
                             poste_id: 1
                         }
-                    })
+                    }).then(() => {
+                        axios({
+                            method: 'put',
+                            url: 'http://localhost:3000/api/operators/' + sessionRead.id
+                        }).then(() => {
+                            this.setState({
+                                add: true,
+                                name: product.name
+                            })
 
-                    axios({
-                        method: 'put',
-                        url: 'http://localhost:3000/api/operators/' + sessionRead.id
-                    })
+                            setTimeout(() => {
+                                this.setState({
+                                    add: false,
+                                    success_add: true
+                                })
+                            }, 750)
 
-                    this.setState({
-                        add: true,
-                        name: product.name
-                    })
-
-                    setTimeout(() => {
-                        this.setState({
-                            add: false,
-                            success_add: true
+                            setTimeout(() => {
+                                this.setState({
+                                    success_add: false
+                                })
+                            }, 2500)
                         })
-                    }, 750)
-
-                    setTimeout(() => {
-                        this.setState({
-                            success_add: false
-                        })
-                    }, 2500)
+                    })
                 }
             })
         }
@@ -191,7 +199,7 @@ class Pickup extends PureComponent {
             </Animated>);
         }
 
-        return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={!loading || !remove || !add || !success_add} className={classes.root}>
+        return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={!loading && !remove && !add && !success_add} className={classes.root}>
             <div className={classes.root}>
                 <Typography variant='h5'>
                     Products list
@@ -216,7 +224,7 @@ class Pickup extends PureComponent {
                                         <FontAwesomeIcon icon={['fal', 'times']} />
                                     </Button>
                                     <Button onClick={() => {this.handlePickup(product.attributes)}} color='primary' className={classes.btn}>
-                                        <FontAwesomeIcon icon={['fal', 'plus']} />
+                                        <FontAwesomeIcon icon={['fal', 'hand-paper']} />
                                     </Button>
                                 </TableCell>
                             </TableRow>
