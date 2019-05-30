@@ -6,6 +6,9 @@ export default {
     },
     Operators: {
       controller: "operators"
+    },
+    Products: {
+      controller: 'products'
     }
   }
 };
