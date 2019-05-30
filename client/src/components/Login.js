@@ -129,6 +129,8 @@ class Login extends PureComponent {
 
         const user = operators.find((operator) => {
             if (operator.name === nameInput) return operator
+
+            return null
         })
 
         if (user) {
