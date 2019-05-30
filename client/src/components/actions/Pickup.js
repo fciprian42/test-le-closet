@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {Animated} from "react-animated-css"
 import { CircularProgress, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Avatar } from '@material-ui/core'
 
 import axios from 'axios'
@@ -16,7 +17,8 @@ const styles = () => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        padding: '15px'
+        padding: '15px',
+        width: '100%'
     },
 
     loading: {
@@ -169,15 +171,15 @@ class Pickup extends PureComponent {
         const { add, remove, products, success_add } = this.state
 
         if (loading || remove || add) {
-            return (
+            return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={loading || remove || add} className={classes.loading}>
                 <div className={classes.loading}>
                     <CircularProgress size={64} />
                 </div>
-            );
+            </Animated>);
         }
 
         if (success_add) {
-            return (
+            return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={success_add} className={classes.loading}>
                 <div className={classes.loading}>
                     <Avatar className={classes.success}>
                         <FontAwesomeIcon icon={['fal', 'check']} style={{fontSize: '40px'}} />
@@ -186,10 +188,10 @@ class Pickup extends PureComponent {
                         The product '<strong>{this.state.name}</strong>' has been add to checkup list
                     </Typography>
                 </div>
-            );
+            </Animated>);
         }
 
-        return (
+        return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={!loading || !remove || !add || !success_add} className={classes.root}>
             <div className={classes.root}>
                 <Typography variant='h5'>
                     Products list
@@ -222,7 +224,7 @@ class Pickup extends PureComponent {
                     </TableBody>
                 </Table>}
             </div>
-        )
+        </Animated>)
     }
 }
 
