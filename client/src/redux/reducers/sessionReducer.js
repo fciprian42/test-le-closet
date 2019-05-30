@@ -12,6 +12,11 @@ function sessionReducer(state = initialState, action) {
         case sessionConstants.LOGOUT:
             sessionStorage.removeItem('auth')
             return { session: null, isLogged: false }
+        case sessionConstants.SWITCH_SERVICE:
+            return {
+                ...state,
+                currentService: action.data
+            }
         default:
             return state
     }
