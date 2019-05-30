@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { railsActions } from "redux-rails";
 import { CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import {Animated} from "react-animated-css";
 
 const styles = theme => ({
   progress: {
@@ -24,7 +25,8 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: '15px'
+    padding: '15px',
+    width: '100%'
   },
   text: {
     textTransform: "capitalize"
@@ -53,7 +55,7 @@ class Postes extends PureComponent {
   static getDerivedStateFromProps(props, prevState) {
     const { operators_postes, postes } = props
 
-    if (operators_postes && operators_postes.length > 0) {
+    if ((operators_postes && operators_postes.length > 0) || (postes && postes.length > 0)) {
       let operatorsArray = []
 
       postes.forEach(poste => {
@@ -88,14 +90,14 @@ class Postes extends PureComponent {
     const { postes, loading } = this.state;
 
     if (loading) {
-      return (
+      return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={loading} className={classes.progress}>
         <div className={classes.progress}>
           <CircularProgress size={64} />
         </div>
-      );
+      </Animated>);
     }
 
-    return (
+    return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={!loading} className={classes.root}>
       <div className={classes.root}>
         <Typography variant='h5'>
           Monitoring of operations
@@ -117,7 +119,7 @@ class Postes extends PureComponent {
           </TableBody>
         </Table>}
       </div>
-    );
+    </Animated>);
   }
 }
 

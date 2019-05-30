@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import {CircularProgress, Typography, Avatar, InputLabel, InputAdornment, FormControl, Input, Button, FormHelperText } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import sessionConstants from '../redux/constants/sessionConstants'
+import {Animated} from "react-animated-css";
 
 import LockIcon from '@material-ui/icons/Lock'
 import CheckIcon from '@material-ui/icons/Check'
@@ -18,7 +19,8 @@ const styles = () => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        textAlign: 'center'
     },
 
     avatar: {
@@ -170,47 +172,49 @@ class Login extends PureComponent {
         }
 
         return (
-            <div className={classes.root}>
-                <Avatar className={!isLogged ? classes.avatar : classes.success}>
-                    {!isLogged && <LockIcon style={{ fontSize: 40 }} />}
-                    {isLogged && <CheckIcon style={{ fontSize: 40 }} />}
-                </Avatar>
-                <Typography variant='h4' style={{fontWeight: 300, marginBottom: '1em'}}>
-                    {!isLogged && <>Login to your dashboard</>}
-                    {isLogged && <>Welcome {this.state.nameInput}</>}
-                </Typography>
-                {!loading && <form onSubmit={this.handleSubmit} className={classes.form}>
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="username">Username</InputLabel>
-                        <Input
-                            required
-                            id="username"
-                            value={this.state.nameInput}
-                            onChange={this.handleChange}
-                            startAdornment={<InputAdornment
-                                position="start"
-                                style={{color: 'rgba(0, 0, 0, 0.54)'}}
-                            >
-                                <UserIcon/>
-                            </InputAdornment>}
-                        />
-                        {error && <FormHelperText id='username' style={{color: '#eb4d4b'}}>
-                            This operator doesn't exist
-                        </FormHelperText>}
-                    </FormControl>
-                    <Button fullWidth type='submit' variant='contained' color='primary' style={{marginTop: '2em', color: '#fff'}}>
-                        Login
-                    </Button>
-                </form>}
-                {loading && !isLogged && <div>
-                    <CircularProgress size={32} />
-                </div>}
-                {isLogged && <div>
-                    <Typography variant='h6' style={{fontWeight: 300, marginTop: '1em'}}>
-                        You will be redirect to your dashboard in {this.state.seconds}...
+            <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true} className={classes.root}>
+                <div className={classes.root}>
+                    <Avatar className={!isLogged ? classes.avatar : classes.success}>
+                        {!isLogged && <LockIcon style={{ fontSize: 40 }} />}
+                        {isLogged && <CheckIcon style={{ fontSize: 40 }} />}
+                    </Avatar>
+                    <Typography variant='h4' style={{fontWeight: 300, marginBottom: '1em'}}>
+                        {!isLogged && <>Login to your dashboard</>}
+                        {isLogged && <>Welcome {this.state.nameInput}</>}
                     </Typography>
-                </div>}
-            </div>
+                    {!loading && <form onSubmit={this.handleSubmit} className={classes.form}>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <Input
+                                required
+                                id="username"
+                                value={this.state.nameInput}
+                                onChange={this.handleChange}
+                                startAdornment={<InputAdornment
+                                    position="start"
+                                    style={{color: 'rgba(0, 0, 0, 0.54)'}}
+                                >
+                                    <UserIcon/>
+                                </InputAdornment>}
+                            />
+                            {error && <FormHelperText id='username' style={{color: '#eb4d4b'}}>
+                                This operator doesn't exist
+                            </FormHelperText>}
+                        </FormControl>
+                        <Button fullWidth type='submit' variant='contained' color='primary' style={{marginTop: '2em', color: '#fff'}}>
+                            Login
+                        </Button>
+                    </form>}
+                    {loading && !isLogged && <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={loading && !isLogged}>
+                        <CircularProgress size={64} />
+                    </Animated>}
+                    {isLogged && <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={isLogged}>
+                        <Typography variant='h6' style={{fontWeight: 300, marginTop: '1em'}}>
+                            You will be redirect to your dashboard in {this.state.seconds}...
+                        </Typography>
+                    </Animated>}
+                </div>
+            </Animated>
         )
     }
 }

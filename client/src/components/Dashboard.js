@@ -6,6 +6,7 @@ import { Typography, FormControl, MenuItem, Select, Input } from '@material-ui/c
 import { withStyles } from '@material-ui/core/styles'
 import {railsActions} from "redux-rails";
 import sessionConstants from '../redux/constants/sessionConstants'
+import {Animated} from "react-animated-css";
 
 import axios from 'axios'
 
@@ -15,7 +16,7 @@ const styles = () => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'center'
     },
 
     formControl: {
@@ -104,28 +105,29 @@ class Dashboard extends PureComponent {
             return <Redirect to='/'/>
         }
 
-        return (<div className={classes.root}>
-            <Typography variant='h4' style={{fontWeight: 300, marginTop: '1em'}}>
-                {name}
-            </Typography>
-            <Typography variant='h6' style={{fontWeight: 300}}>
-                You are tag in
-                {sessionRead.id === this.state.id && <FormControl className={classes.formControl}>
-                    <Select
-                        value={currentService}
-                        onChange={this.handleChange}
-                        input={<Input id="select" />}
-                    >
-                        {postes.map((poste) => (
-                            <MenuItem key={poste.id} value={poste.category}>
-                                {poste.category}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>}
-                {sessionRead.id !== this.state.id && currentService}
-            </Typography>
-        </div>)
+        return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true} className={classes.root}>
+                <div>
+                    <Typography variant='h4' style={{fontWeight: 300, marginTop: '1em'}}>
+                        {name}
+                    </Typography>
+                    <Typography variant='h6' style={{fontWeight: 300, textAlign: 'center'}}>
+                        {sessionRead.id === this.state.id && <>You are tag in <FormControl className={classes.formControl}>
+                            <Select
+                                value={currentService}
+                                onChange={this.handleChange}
+                                input={<Input id="select" />}
+                            >
+                                {postes.map((poste) => (
+                                    <MenuItem key={poste.id} value={poste.category}>
+                                        {poste.category}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl></>}
+                        {sessionRead.id !== this.state.id && currentService}
+                    </Typography>
+                </div>
+            </Animated>)
     }
 }
 

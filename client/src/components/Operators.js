@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import _ from "lodash";
+import {Animated} from "react-animated-css";
 
 const styles = theme => ({
   progress: {
@@ -50,14 +51,14 @@ class Operators extends Component {
     const { classes, loading, operators } = this.props;
 
     if (loading) {
-      return (
+      return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true} className={classes.progress}>
         <div className={classes.progress}>
           <CircularProgress size={64} />
         </div>
-      );
+      </Animated>);
     }
 
-    return (
+    return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={!loading} className={classes.root}>
       <div className={classes.root}>
         <Typography variant='h5'>
           Operators list
@@ -81,7 +82,7 @@ class Operators extends Component {
           ))}
         </List>
       </div>
-    );
+    </Animated>);
   }
 }
 

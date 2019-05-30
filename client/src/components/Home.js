@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
+import {Animated} from "react-animated-css";
 import hello from "../resources/hello.svg";
 
 const styles = theme => ({
@@ -18,16 +19,18 @@ const styles = theme => ({
 });
 
 const Home = ({ classes }) => (
-  <div className={classes.root}>
-    <img src={hello} alt="welcome" className={classes.img} />
-    <Typography variant="h5" paragraph>
-      Hello! Happy coding :)
-    </Typography>
-    <Typography>
-      Do not hesitate to <a href="mailto:baptiste@lecloset.fr">contact us</a> if
-      necessary
-    </Typography>
-  </div>
+    <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true} className={classes.root}>
+        <div>
+            <img src={hello} alt="welcome" className={classes.img} />
+            <Typography variant="h5" paragraph>
+              Hello! Happy coding :)
+            </Typography>
+            <Typography>
+              Do not hesitate to <a href="mailto:baptiste@lecloset.fr">contact us</a> if
+              necessary
+            </Typography>
+        </div>
+    </Animated>
 );
 
 export default withStyles(styles)(Home);
