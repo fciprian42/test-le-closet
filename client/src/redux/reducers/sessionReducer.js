@@ -2,7 +2,7 @@ import sessionConstants from '../constants/sessionConstants'
 
 let session = sessionStorage.getItem('auth')
 
-const initialState = session ? {isLogged: true, session, currentService: ''} : {isLogged: false, session: null, currentService: ''}
+const initialState = session ? {isLogged: true, session} : {isLogged: false, session: null}
 
 function sessionReducer(state = initialState, action) {
     switch (action.type) {
@@ -11,8 +11,17 @@ function sessionReducer(state = initialState, action) {
             return { session: JSON.stringify(action.data), isLogged: true }
         case sessionConstants.LOGOUT:
             sessionStorage.removeItem('auth')
-            return { session: null, isLogged: false }
+            return { session: null, isLogged: false, currentService: '' }
         case sessionConstants.SWITCH_SERVICE:
+            let a = JSON.parse(sessionStorage.getItem("auth"));
+            let newSession = {}
+
+            newSession.id = a.id
+            newSession.name = a.name
+            newSession.currentService = action.data
+
+            sessionStorage.setItem('auth', JSON.stringify(newSession))
+
             return {
                 ...state,
                 currentService: action.data
