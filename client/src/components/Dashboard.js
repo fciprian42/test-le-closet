@@ -21,6 +21,20 @@ const styles = () => ({
 
     formControl: {
         marginLeft: 8
+    },
+
+    score: {
+        display: 'flex',
+        marginTop: '2em',
+        width: 120,
+        height: 120,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: '50%',
+        background: '#2196f3',
+        color: '#fff',
+        fontSize: '2em',
+        border: '2px solid #1769aa'
     }
 });
 
@@ -34,6 +48,7 @@ class Dashboard extends PureComponent {
             score: 0,
             name: null,
             postes: [],
+            edit: false,
             redirect: false
         }
 
@@ -41,10 +56,12 @@ class Dashboard extends PureComponent {
     }
 
     static getDerivedStateFromProps(props, prevState) {
-        const { postes } = props
+        const { postes, session } = props
 
         if (postes && postes.length > 0) {
             let newPostes = []
+
+            let sessionRead = session && session.isLogged && JSON.parse(session.session)
 
             postes.forEach((poste) => {
                 newPostes.push({id: poste.attributes.id, category: poste.attributes.category})
@@ -53,7 +70,7 @@ class Dashboard extends PureComponent {
             return {
                 ...prevState,
                 postes: newPostes,
-                currentService: prevState.currentService
+                currentService: prevState.edit ? prevState.currentService : sessionRead.currentService
             }
         }
 
@@ -89,7 +106,8 @@ class Dashboard extends PureComponent {
         const value = e.target.value
 
         this.setState({
-            currentService: value
+            currentService: value,
+            edit: true
         })
 
         this.props.setService(value)
@@ -97,7 +115,7 @@ class Dashboard extends PureComponent {
 
     render() {
         const { classes, session } = this.props
-        const { redirect, name, postes, currentService} = this.state
+        const { redirect, name, postes, currentService, score} = this.state
 
         let sessionRead = session && session.isLogged && JSON.parse(session.session)
 
@@ -106,7 +124,7 @@ class Dashboard extends PureComponent {
         }
 
         return (<Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true} className={classes.root}>
-                <div>
+                <div className={classes.root}>
                     <Typography variant='h4' style={{fontWeight: 300, marginTop: '1em'}}>
                         {name}
                     </Typography>
@@ -126,6 +144,9 @@ class Dashboard extends PureComponent {
                         </FormControl></>}
                         {sessionRead.id !== this.state.id && currentService}
                     </Typography>
+                    <div className={classes.score}>
+                        {score}
+                    </div>
                 </div>
             </Animated>)
     }
