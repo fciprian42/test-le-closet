@@ -6,7 +6,8 @@ import { withStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CircularProgress, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@material-ui/core'
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+
+import axios from 'axios'
 
 const styles = () => ({
     root: {
@@ -48,13 +49,27 @@ class Pickup extends PureComponent {
         super(props);
 
         this.state = {
-            id: null,
+            add: false,
             name: '',
-            add: false
+            products: []
         }
 
         this.handleDelete = this.handleDelete.bind(this)
         this.handlePickup = this.handlePickup.bind(this)
+    }
+
+    static getDerivedStateFromProps(props, prevState) {
+        const { products } = props
+
+        if (products && products.length > 0) {
+            return {
+                add: prevState.add,
+                name: prevState.name && prevState.name.length > 0 ? prevState.name : '',
+                products
+            }
+        }
+
+        return prevState
     }
 
     componentDidMount() {
@@ -63,7 +78,30 @@ class Pickup extends PureComponent {
 
     handleDelete(product) {
         if (product) {
+            axios({
+                method: 'delete',
+                url: 'http://localhost:3000/api/products/' + product.id,
+            }).then(response => {
+                let newProducts = this.state.products
 
+                this.setState({
+                    add: true,
+                    name: product.name
+                })
+
+                newProducts.forEach((item, index) => {
+                    if (item.attributes.id === product.id) {
+                        newProducts.splice(index, 1)
+                    }
+                })
+
+                setTimeout(() => {
+                    this.setState({
+                        add: false,
+                        products: newProducts
+                    })
+                }, 750)
+            })
         }
     }
 
@@ -74,9 +112,10 @@ class Pickup extends PureComponent {
     }
 
     render() {
-        const { classes, loading, products } = this.props;
+        const { classes, loading } = this.props
+        const { add, products } = this.state
 
-        if (loading) {
+        if (loading || add) {
             return (
                 <div className={classes.loading}>
                     <CircularProgress size={64} />
@@ -105,10 +144,10 @@ class Pickup extends PureComponent {
                                 </TableCell>
                                 <TableCell align="left">{product.attributes.name}</TableCell>
                                 <TableCell align="right">
-                                    <Button onClick={this.handleDelete(product.attributes)} color='secondary' className={classes.btn}>
+                                    <Button onClick={() => {this.handleDelete(product.attributes)}} color='secondary' className={classes.btn}>
                                         <FontAwesomeIcon icon={['fal', 'times']} />
                                     </Button>
-                                    <Button onClick={this.handleDelete(product.attributes)} color='primary' className={classes.btn}>
+                                    <Button onClick={() => {this.handleDelete(product.attributes)}} color='primary' className={classes.btn}>
                                         <FontAwesomeIcon icon={['fal', 'plus']} />
                                     </Button>
                                 </TableCell>
