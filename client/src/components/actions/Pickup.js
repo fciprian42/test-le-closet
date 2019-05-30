@@ -135,6 +135,13 @@ class Pickup extends PureComponent {
                             operator_id: sessionRead.id,
                             poste_id: 1
                         }
+                    }).then(response => {
+                        if (response) {
+                            axios({
+                                method: 'put',
+                                url: 'http://localhost:3000/api/operators/' + sessionRead.id
+                            })
+                        }
                     })
 
                     this.setState({
