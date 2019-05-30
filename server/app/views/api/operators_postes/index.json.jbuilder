@@ -1,3 +1,3 @@
-json.array! @operators_postes do |operators_poste|
-  json.extract! operators_poste, :operator_id, :poste_id
+json.array! @operatorsPostes do |operatorsPoste|
+  json.extract! operatorsPoste, :operator_id, :poste_id
 end
