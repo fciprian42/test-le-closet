@@ -52,6 +52,15 @@ const styles = theme => ({
 
   avatar: {
     marginBottom: '1em'
+  },
+
+  iconFontAwesome: {
+    height: '24px',
+    display: 'flex',
+    width: '24px',
+    fontSize: '18px',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -70,6 +79,8 @@ class Sidebar extends PureComponent {
     const { classes, session } = this.props
 
     let sessionRead = session && JSON.parse(session.session)
+
+    console.log(session)
 
     return (
         <Drawer
@@ -149,9 +160,9 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button>
-                  <ListItemIcon>
-                    <FontAwesomeIcon icon={['fal', 'box']} />
+                <ListItem button disabled={session.currentService !== "pickup"}>
+                  <ListItemIcon className={classes.iconFontAwesome}>
+                    <FontAwesomeIcon icon={['fal', 'hand-paper']} />
                   </ListItemIcon>
                   <ListItemText primary="Pickup" />
                 </ListItem>
@@ -162,8 +173,8 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button>
-                  <ListItemIcon>
+                <ListItem button disabled={session.currentService !== "checkup"}>
+                  <ListItemIcon className={classes.iconFontAwesome}>
                     <FontAwesomeIcon icon={['fal', 'check']} />
                   </ListItemIcon>
                   <ListItemText primary="Checkup" />
@@ -175,9 +186,9 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button>
-                  <ListItemIcon>
-                    <FontAwesomeIcon icon={['fal', 'hand-paper']} />
+                <ListItem button disabled={session.currentService !== "packup"}>
+                  <ListItemIcon className={classes.iconFontAwesome}>
+                    <FontAwesomeIcon icon={['fal', 'box']} />
                   </ListItemIcon>
                   <ListItemText primary="Packup" />
                 </ListItem>
