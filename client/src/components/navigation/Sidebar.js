@@ -2,9 +2,11 @@ import React, { PureComponent } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import { NavLink, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {NavLink, Link} from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -13,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
 import ComputerIcon from "@material-ui/icons/Computer";
 import HomeIcon from "@material-ui/icons/Home";
+
 import sessionConstants from "../../redux/constants/sessionConstants";
 
 const drawerWidth = 350;
@@ -61,7 +64,6 @@ class Sidebar extends PureComponent {
 
   handleLogout() {
     this.props.dispatch({type: sessionConstants.LOGOUT})
-    this.props.location.routesMap.push('/login')
   }
 
   render() {
@@ -81,7 +83,7 @@ class Sidebar extends PureComponent {
           {session.isLogged && <div className={classes.avatar}>
             <Link
                 to={{
-                  pathname: `dashboard/${sessionRead.id}`,
+                  pathname: `/dashboard/${sessionRead.id}`,
                   state: {
                     id: sessionRead.id,
                     name: sessionRead.name
@@ -139,6 +141,48 @@ class Sidebar extends PureComponent {
                 <ListItemText primary="Operators" />
               </ListItem>
             </NavLink>
+            {session.isLogged && <>
+              <Divider/>
+              <NavLink
+                  exact
+                  to="/pickup"
+                  className={classes.link}
+                  activeClassName={classes.active}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={['fal', 'box']} />
+                  </ListItemIcon>
+                  <ListItemText primary="Pickup" />
+                </ListItem>
+              </NavLink>
+              <NavLink
+                  exact
+                  to="/checkup"
+                  className={classes.link}
+                  activeClassName={classes.active}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={['fal', 'check']} />
+                  </ListItemIcon>
+                  <ListItemText primary="Checkup" />
+                </ListItem>
+              </NavLink>
+              <NavLink
+                  exact
+                  to="/packup"
+                  className={classes.link}
+                  activeClassName={classes.active}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={['fal', 'hand-paper']} />
+                  </ListItemIcon>
+                  <ListItemText primary="Packup" />
+                </ListItem>
+              </NavLink>
+            </>}
           </List>
           {!session.isLogged && <div className={classes.login}>
             <Link to='/login' style={{textDecoration: 'none'}}>
