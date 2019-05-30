@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_084602) do
   end
 
   create_table "operators", force: :cascade do |t|
+    t.integer "score"
     t.string "first_name"
     t.string "last_name"
     t.datetime "created_at", null: false

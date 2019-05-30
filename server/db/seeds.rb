@@ -7,11 +7,11 @@ Poste.destroy_all
 Poste.categories.keys.each { |cat| Poste.create!(category: cat) }
 
 Operator.create!([
-  { first_name: "Hubert", last_name: "Bonisseur De La Bath" },
-  { first_name: "Noël", last_name: "Flantier" },
-  { first_name: "Jack", last_name: "Jefferson" },
-  { first_name: "Von", last_name: "Zimmel" },
-  { first_name: "Larmina", last_name: "Betouche" }
+  { first_name: "Hubert", last_name: "Bonisseur De La Bath", score: 0 },
+  { first_name: "Noël", last_name: "Flantier", score: 0 },
+  { first_name: "Jack", last_name: "Jefferson", score: 0 },
+  { first_name: "Von", last_name: "Zimmel", score: 0 },
+  { first_name: "Larmina", last_name: "Betouche", score: 0 }
 ])
 
 Product.create!([
