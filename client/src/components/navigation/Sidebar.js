@@ -71,16 +71,21 @@ class Sidebar extends PureComponent {
     this.handleLogout = this.handleLogout.bind(this)
   }
 
-  handleLogout() {
+  handleLogout(e) {
+    e.preventDefault()
     this.props.dispatch({type: sessionConstants.LOGOUT})
+
+    window.location = '/login'
   }
 
   render() {
     const { classes, session } = this.props
+    let sessionRead, currentService
 
-    let sessionRead = session && JSON.parse(session.session)
-
-    console.log(session)
+    if (session && session.isLogged) {
+      sessionRead = session && JSON.parse(session.session)
+      currentService = session && session.currentService ? session.currentService : sessionRead.currentService
+    }
 
     return (
         <Drawer
@@ -93,13 +98,7 @@ class Sidebar extends PureComponent {
         >
           {session.isLogged && <div className={classes.avatar}>
             <Link
-                to={{
-                  pathname: `/dashboard/${sessionRead.id}`,
-                  state: {
-                    id: sessionRead.id,
-                    name: sessionRead.name
-                  }
-                }}
+                to={`/dashboard/${sessionRead.id}`}
                 className={classes.link}
             >
               <ListItem button>
@@ -160,7 +159,7 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button disabled={session.currentService !== "pickup"}>
+                <ListItem button disabled={currentService !== "pickup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
                     <FontAwesomeIcon icon={['fal', 'hand-paper']} />
                   </ListItemIcon>
@@ -173,7 +172,7 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button disabled={session.currentService !== "checkup"}>
+                <ListItem button disabled={currentService !== "checkup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
                     <FontAwesomeIcon icon={['fal', 'check']} />
                   </ListItemIcon>
@@ -186,7 +185,7 @@ class Sidebar extends PureComponent {
                   className={classes.link}
                   activeClassName={classes.active}
               >
-                <ListItem button disabled={session.currentService !== "packup"}>
+                <ListItem button disabled={currentService !== "packup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
                     <FontAwesomeIcon icon={['fal', 'box']} />
                   </ListItemIcon>
