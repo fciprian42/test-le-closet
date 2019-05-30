@@ -72,7 +72,10 @@ class Postes extends PureComponent {
       }
     }
 
-    return prevState
+    return {
+      loading: true,
+      postes: []
+    }
   }
 
   componentDidMount() {
