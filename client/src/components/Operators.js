@@ -66,13 +66,7 @@ class Operators extends Component {
           {_.map(operators, operator => (
             <Link
                 key={operator.id}
-                to={{
-                  pathname: `dashboard/${operator.attributes.id}`,
-                  state: {
-                    id: operator.attributes.id,
-                    name: operator.attributes.name
-                  }
-                }}
+                to={`dashboard/${operator.attributes.id}`}
                 className={classes.link}
             >
               <ListItem>
