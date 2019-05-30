@@ -22,6 +22,13 @@ module Api
         end
     end
 
-    private
+    def show
+        @operator = Operator.find_by_id(params[:id])
+        if @operator.present?
+            respond_to do |format|
+                format.json { render json: @operator }
+            end
+        end
+    end
   end
 end
