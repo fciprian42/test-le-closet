@@ -12,7 +12,7 @@ module Api
          def create
              @operator_poste = OperatorsPostes.new(operator_poste_params)
              respond_to do |format|
-                 if @operator_poste
+                 if @operator_poste.save
                     format.json { render json: @operator_poste }
                  end
              end
