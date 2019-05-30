@@ -14,6 +14,9 @@ ActiveRecord::Schema.define(version: 2019_03_04_084602) do
 
   create_table "items", force: :cascade do |t|
     t.integer "product_id"
+    t.string "product_name"
+    t.string "by"
+    t.boolean "checked"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_items_on_product_id"
