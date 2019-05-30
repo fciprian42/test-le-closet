@@ -1,5 +1,6 @@
 class OperatorsPostes < ApplicationRecord
-  belongs_to :poste, :operator
+  belongs_to :poste
+  belongs_to :operator
 
   validates :product, :operator, presence: true
 
