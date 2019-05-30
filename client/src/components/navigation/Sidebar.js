@@ -69,6 +69,7 @@ class Sidebar extends PureComponent {
     super(props);
 
     this.handleLogout = this.handleLogout.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   handleLogout(e) {
@@ -76,6 +77,15 @@ class Sidebar extends PureComponent {
     this.props.dispatch({type: sessionConstants.LOGOUT})
 
     window.location = '/login'
+  }
+
+  handleClick(e, value) {
+    const { session } = this.props
+
+    let sessionRead = session && JSON.parse(session.session)
+    let currentService = session && session.currentService ? session.currentService : sessionRead.currentService
+
+    if (currentService !== value) e.preventDefault()
   }
 
   render() {
@@ -97,9 +107,11 @@ class Sidebar extends PureComponent {
             anchor="left"
         >
           {session.isLogged && <div className={classes.avatar}>
-            <Link
+            <NavLink
+                exact
                 to={`/dashboard/${sessionRead.id}`}
                 className={classes.link}
+                activeClassName={classes.active}
             >
               <ListItem button>
                 <ListItemIcon>
@@ -107,9 +119,9 @@ class Sidebar extends PureComponent {
                     {sessionRead.name.charAt(0)}
                   </Avatar>
                 </ListItemIcon>
-                <ListItemText primary={sessionRead.name} secondary='Operator' style={{padding: 0}}/>
+                <ListItemText primary={sessionRead.name} secondary={`Operator - ${currentService ? currentService + ' in progress' : 'Run away'}`} style={{padding: 0}}/>
               </ListItem>
-            </Link>
+            </NavLink>
           </div>}
           <List>
             <NavLink
@@ -158,6 +170,7 @@ class Sidebar extends PureComponent {
                   to="/pickup"
                   className={classes.link}
                   activeClassName={classes.active}
+                  onClick={(e) => {this.handleClick(e, 'pickup')}}
               >
                 <ListItem button disabled={currentService !== "pickup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
@@ -171,6 +184,7 @@ class Sidebar extends PureComponent {
                   to="/checkup"
                   className={classes.link}
                   activeClassName={classes.active}
+                  onClick={(e) => {this.handleClick(e, 'checkup')}}
               >
                 <ListItem button disabled={currentService !== "checkup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
@@ -184,6 +198,7 @@ class Sidebar extends PureComponent {
                   to="/packup"
                   className={classes.link}
                   activeClassName={classes.active}
+                  onClick={(e) => {this.handleClick(e, 'packup')}}
               >
                 <ListItem button disabled={currentService !== "packup"}>
                   <ListItemIcon className={classes.iconFontAwesome}>
