@@ -5,7 +5,7 @@ class Item < ApplicationRecord
 
   def to_builder
         Jbuilder.new do |item|
-          item.(self, :id, :id_product)
+          item.(self, :id, :id_product, :product_name, :by, :checked)
         end
       end
 end
