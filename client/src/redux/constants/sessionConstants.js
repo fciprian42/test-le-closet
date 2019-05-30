@@ -1,6 +1,7 @@
 const sessionConstants = {
     LOGIN: 'LOGIN',
-    LOGOUT: 'LOGOUT'
+    LOGOUT: 'LOGOUT',
+    SWITCH_SERVICE: 'SWITCH_SERVICE'
 }
 
 export default sessionConstants

@@ -2,7 +2,7 @@ import sessionConstants from '../constants/sessionConstants'
 
 let session = sessionStorage.getItem('auth')
 
-const initialState = session ? {isLogged: true, session} : {isLogged: false, session: null}
+const initialState = session ? {isLogged: true, session, currentService: ''} : {isLogged: false, session: null, currentService: ''}
 
 function sessionReducer(state = initialState, action) {
     switch (action.type) {
