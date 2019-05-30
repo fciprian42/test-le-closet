@@ -4,5 +4,6 @@ Rails.application.routes.draw do
     resources :operators, only: %i(index)
     resources :products, only: [:index, :destroy]
     resources :postes, only: %i(index)
+    resources :items, only: [:index, :create]
   end
 end
