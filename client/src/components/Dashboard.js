@@ -60,7 +60,7 @@ class Dashboard extends PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.match.params.id) {
+        if (this.props.match.params.id && this.props.session.isLogged) {
             this.props.fetchPostes();
 
             axios({
