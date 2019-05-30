@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBox, faHandPaper, faCheck } from '@fortawesome/pro-light-svg-icons'
+import { faBox, faHandPaper, faCheck, faTimes, faPlus } from '@fortawesome/pro-light-svg-icons'
 import "typeface-roboto";
 
 import { store } from "./redux";
@@ -24,7 +24,7 @@ const theme = createMuiTheme({
   },
 })
 
-library.add(faBox, faHandPaper, faCheck)
+library.add(faBox, faHandPaper, faCheck, faTimes, faPlus)
 
 ReactDOM.render(
   <Provider store={store}>
