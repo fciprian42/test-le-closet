@@ -87,7 +87,7 @@ class Postes extends PureComponent {
     if (loading) {
       return (
         <div className={classes.progress}>
-          <CircularProgress size={32} />
+          <CircularProgress size={64} />
         </div>
       );
     }

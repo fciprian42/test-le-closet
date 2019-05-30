@@ -50,7 +50,7 @@ class Operators extends Component {
     if (loading) {
       return (
         <div className={classes.progress}>
-          <CircularProgress size={32} />
+          <CircularProgress size={64} />
         </div>
       );
     }
@@ -58,7 +58,7 @@ class Operators extends Component {
     return (
       <div className={classes.root}>
         <Typography variant='h5'>
-          Liste des opérateurs
+          Operators list
         </Typography>
         <List>
           {_.map(operators, operator => (
@@ -84,12 +84,6 @@ class Operators extends Component {
             </Link>
           ))}
         </List>
-        <Typography className={classes.todo}>
-          <em>
-            TODO :<br />
-            Lien vers dashboard personnel avec suivi des points
-          </em>
-        </Typography>
       </div>
     );
   }
