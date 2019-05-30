@@ -18,9 +18,11 @@ import _ from "lodash";
 
 const styles = theme => ({
   progress: {
-    margin: "auto",
-    marginTop: theme.spacing.unit * 4,
-    width: "fit-content"
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   root: {
     margin: theme.spacing.unit * 3
