@@ -1,6 +1,6 @@
 Item.destroy_all
 Product.destroy_all
-OperatorsPoste.destroy_all
+OperatorsPostes.destroy_all
 Operator.destroy_all
 Poste.destroy_all
 
