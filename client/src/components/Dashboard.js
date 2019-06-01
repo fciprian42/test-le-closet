@@ -70,7 +70,7 @@ class Dashboard extends PureComponent {
             return {
                 ...prevState,
                 postes: newPostes,
-                currentService: prevState.edit ? prevState.currentService : sessionRead.currentService
+                currentService: prevState.edit ? prevState.currentService : sessionRead.currentService ? sessionRead.currentService : ''
             }
         }
 
@@ -78,8 +78,10 @@ class Dashboard extends PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.match.params.id && this.props.session.isLogged) {
-            this.props.fetchPostes();
+        if (this.props.match.params.id) {
+            if (this.props.session.isLogged && this.props.match.params.id === JSON.parse(this.props.session.session).id.toString()) {
+                this.props.fetchPostes();
+            }
 
             axios({
                 method: 'get',
